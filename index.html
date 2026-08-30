@@ -67,15 +67,6 @@ body {
 
 
 /* =====================================================
-   MÚSICA
-===================================================== */
-
-#backgroundMusic {
-    display: none;
-}
-
-
-/* =====================================================
    FRASES DA GALÁXIA
 ===================================================== */
 
@@ -579,12 +570,12 @@ body {
 
 
     <!-- =================================================
-         MÚSICA DE FUNDO
+         MÚSICA
     ================================================== -->
 
     <audio
         id="backgroundMusic"
-        src="UM AMOR PURO.mp3"
+        src="bestpart.mp3"
         loop
         preload="auto">
     </audio>
@@ -797,7 +788,7 @@ const phrases = [
 
     "eu te venero",
 
-    "você é perfeito",
+    "você é o melhor homem que eu poderia ter na minha vida",
 
     "você é gentil",
 
@@ -1254,6 +1245,8 @@ function drawGalaxy(
         H * 0.57;
 
 
+    /* NEBULOSA */
+
     const nebula =
         ctx.createRadialGradient(
             centerX,
@@ -1509,8 +1502,7 @@ function drawGalaxy(
 
 
 /* =====================================================
-   FRASES
-   APARECEM E DESAPARECEM CONSTANTEMENTE
+   FRASES DA ÓRBITA
 ===================================================== */
 
 function drawOrbitWords(
@@ -1566,12 +1558,16 @@ function drawOrbitWords(
             index
         ) {
 
+            /* MOVIMENTO */
+
             const angle =
                 word.angle +
                 time *
                 word.speed *
                 word.direction;
 
+
+            /* FLUTUAÇÃO */
 
             const floating =
                 Math.sin(
@@ -1580,6 +1576,8 @@ function drawOrbitWords(
                 ) *
                 4;
 
+
+            /* POSIÇÃO */
 
             const x =
                 Math.cos(
@@ -1595,6 +1593,10 @@ function drawOrbitWords(
                 radiusY +
                 floating;
 
+
+            /* =========================================
+               DESAPARECER E APARECER NOVAMENTE
+            ========================================= */
 
             const cycle =
                 (
@@ -1639,6 +1641,8 @@ function drawOrbitWords(
             }
 
 
+            /* CURVA SUAVE */
+
             fade =
                 fade *
                 fade *
@@ -1647,6 +1651,8 @@ function drawOrbitWords(
                     2 * fade
                 );
 
+
+            /* PROFUNDIDADE */
 
             const depth =
                 (
@@ -1664,6 +1670,8 @@ function drawOrbitWords(
             opacity *=
                 fade;
 
+
+            /* ENTRADA */
 
             const entrance =
                 Math.max(
@@ -1683,12 +1691,16 @@ function drawOrbitWords(
                 entrance;
 
 
+            /* ROTAÇÃO */
+
             const rotation =
                 Math.sin(
                     angle
                 ) *
                 7;
 
+
+            /* POSIÇÃO FINAL */
 
             word.element.style.transform =
                 `
@@ -1844,6 +1856,8 @@ function drawHeart(
 
     }
 
+
+    /* CONTORNO */
 
     ctx.strokeStyle =
         "rgba(255,110,205,0.58)";
@@ -2117,6 +2131,8 @@ function animate(
         ) / 1000;
 
 
+    /* LIMPA */
+
     ctx.fillStyle =
         "#000";
 
@@ -2131,6 +2147,7 @@ function animate(
 
     /* =================================================
        PRIMEIRO CARTÃO
+       DURA 1.8 SEGUNDOS
     ================================================= */
 
     if (
@@ -2157,11 +2174,12 @@ function animate(
 
 
     /* =================================================
-       GALÁXIA + FRASES
+       GALÁXIA
+       DURA EXATAMENTE 60 SEGUNDOS
     ================================================= */
 
     else if (
-        elapsed < 7.8
+        elapsed < 61.8
     ) {
 
         showCard(-1);
@@ -2182,6 +2200,10 @@ function animate(
         );
 
 
+        /* =============================================
+           CORAÇÃO
+        ============================================= */
+
         const heartProgress =
             Math.min(
                 1,
@@ -2197,6 +2219,10 @@ function animate(
             heartProgress
         );
 
+
+        /* =============================================
+           FRASES
+        ============================================= */
 
         const textProgress =
             Math.min(
@@ -2221,6 +2247,10 @@ function animate(
         );
 
 
+        /* =============================================
+           CORAÇÕES PEQUENOS
+        ============================================= */
+
         drawFloatingHearts(
             time
         );
@@ -2233,7 +2263,7 @@ function animate(
     ================================================= */
 
     else if (
-        elapsed < 9.5
+        elapsed < 64
     ) {
 
         showCard(1);
@@ -2255,7 +2285,7 @@ function animate(
     ================================================= */
 
     else if (
-        elapsed < 11.6
+        elapsed < 67
     ) {
 
         showCard(2);
@@ -2274,6 +2304,7 @@ function animate(
 
     /* =================================================
        FINAL
+       GALÁXIA VOLTA
     ================================================= */
 
     else {
@@ -2326,7 +2357,7 @@ function animate(
 
 
 /* =====================================================
-   INICIAR UNIVERSO
+   INICIAR UNIVERSO + MÚSICA
 ===================================================== */
 
 function startUniverse() {
@@ -2338,35 +2369,38 @@ function startUniverse() {
     }
 
 
-    /* ================================================
-       COMEÇA A MÚSICA NO MESMO CLIQUE
-    ================================================= */
+    /* =============================================
+       COMEÇA A MÚSICA
+       O clique no botão permite
+       que o navegador autorize o áudio.
+    ============================================= */
 
     backgroundMusic.currentTime = 0;
 
 
-    backgroundMusic
-        .play()
-        .then(
-            function() {
+    const musicPromise =
+        backgroundMusic.play();
 
-                console.log(
-                    "Música iniciada!"
-                );
 
-            }
-        )
-        .catch(
+    if (
+        musicPromise !== undefined
+    ) {
+
+        musicPromise.catch(
             function(error) {
 
-                console.error(
-                    "Erro ao tocar a música:",
+                console.log(
+                    "Não foi possível iniciar a música:",
                     error
                 );
 
             }
         );
 
+    }
+
+
+    /* ESCONDE TELA INICIAL */
 
     start.classList.add(
         "hide"
