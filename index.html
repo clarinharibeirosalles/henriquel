@@ -1,0 +1,2458 @@
+```html
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+<meta charset="UTF-8">
+
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0">
+
+<title>Para meu amor</title>
+
+<style>
+
+/* =====================================================
+   CONFIGURAÇÃO
+===================================================== */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html,
+body {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background: #000;
+}
+
+body {
+    font-family: Georgia, "Times New Roman", serif;
+    color: white;
+}
+
+
+/* =====================================================
+   APP
+===================================================== */
+
+#app {
+    position: relative;
+    width: 100%;
+    height: 100vh;
+    overflow: hidden;
+    background: #000;
+}
+
+
+/* =====================================================
+   CANVAS
+===================================================== */
+
+#space {
+    position: absolute;
+    inset: 0;
+
+    width: 100%;
+    height: 100%;
+
+    display: block;
+
+    z-index: 1;
+}
+
+
+/* =====================================================
+   MÚSICA
+===================================================== */
+
+#backgroundMusic {
+    display: none;
+}
+
+
+/* =====================================================
+   FRASES DA GALÁXIA
+===================================================== */
+
+#orbitText {
+    position: absolute;
+    inset: 0;
+
+    z-index: 7;
+
+    pointer-events: none;
+
+    overflow: hidden;
+
+    opacity: 0;
+
+    transition:
+        opacity 1.5s ease;
+}
+
+
+/* =====================================================
+   FRASES INDIVIDUAIS
+===================================================== */
+
+.orbit-word {
+
+    position: absolute;
+
+    left: 50%;
+    top: 57%;
+
+    white-space: nowrap;
+
+    transform-origin: center center;
+
+    font-family:
+        Georgia,
+        "Times New Roman",
+        serif;
+
+    font-size:
+        clamp(
+            11px,
+            1.45vw,
+            17px
+        );
+
+    font-weight: normal;
+
+    letter-spacing: 0.4px;
+
+    color:
+        rgba(
+            255,
+            225,
+            244,
+            0.9
+        );
+
+    text-shadow:
+        0 0 5px
+        rgba(
+            255,
+            120,
+            205,
+            0.65
+        ),
+
+        0 0 15px
+        rgba(
+            255,
+            30,
+            160,
+            0.4
+        );
+
+    opacity: 0;
+
+    will-change:
+        transform,
+        opacity;
+}
+
+
+/* =====================================================
+   VINHETA
+===================================================== */
+
+.vignette {
+
+    position: absolute;
+    inset: 0;
+
+    z-index: 8;
+
+    pointer-events: none;
+
+    background:
+        radial-gradient(
+            ellipse at center,
+            transparent 32%,
+            rgba(
+                0,
+                0,
+                0,
+                0.52
+            ) 100%
+        );
+}
+
+
+/* =====================================================
+   TELA INICIAL
+===================================================== */
+
+.start {
+
+    position: absolute;
+    inset: 0;
+
+    z-index: 100;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    background: #080306;
+
+    opacity: 1;
+
+    transition:
+        opacity 0.9s ease;
+}
+
+.start.hide {
+
+    opacity: 0;
+
+    pointer-events: none;
+}
+
+
+/* =====================================================
+   CAIXA INICIAL
+===================================================== */
+
+.start-box {
+
+    width:
+        min(
+            85vw,
+            420px
+        );
+
+    padding:
+        32px 25px;
+
+    text-align: center;
+
+    border-radius: 18px;
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(
+                60,
+                5,
+                35,
+                0.96
+            ),
+            rgba(
+                15,
+                0,
+                10,
+                0.98
+            )
+        );
+
+    border:
+        1px solid
+        rgba(
+            255,
+            100,
+            190,
+            0.25
+        );
+
+    box-shadow:
+        0 0 35px
+        rgba(
+            255,
+            0,
+            140,
+            0.18
+        );
+}
+
+
+/* =====================================================
+   TÍTULO
+===================================================== */
+
+.start-box h1 {
+
+    font-size:
+        clamp(
+            28px,
+            7vw,
+            43px
+        );
+
+    line-height: 1.05;
+
+    margin-bottom: 22px;
+
+    text-shadow:
+        0 0 15px
+        rgba(
+            255,
+            80,
+            180,
+            0.35
+        );
+}
+
+
+/* =====================================================
+   SUBTÍTULO
+===================================================== */
+
+.start-box p {
+
+    margin-bottom: 24px;
+
+    font-family: monospace;
+
+    font-size: 10px;
+
+    letter-spacing: 3px;
+
+    color: #e9abc9;
+}
+
+
+/* =====================================================
+   BOTÃO
+===================================================== */
+
+#enter {
+
+    display: inline-block;
+
+    position: relative;
+
+    z-index: 200;
+
+    padding:
+        14px 24px;
+
+    border: none;
+
+    border-radius: 999px;
+
+    background:
+        linear-gradient(
+            90deg,
+            #b92b72,
+            #f27eaa
+        );
+
+    color: white;
+
+    font-size: 12px;
+
+    font-weight: bold;
+
+    letter-spacing: 1.5px;
+
+    cursor: pointer;
+
+    box-shadow:
+        0 0 22px
+        rgba(
+            242,
+            126,
+            170,
+            0.45
+        );
+
+    transition:
+        transform 0.2s ease,
+        filter 0.2s ease;
+}
+
+#enter:hover {
+
+    transform:
+        scale(1.04);
+
+    filter:
+        brightness(1.1);
+}
+
+#enter:active {
+
+    transform:
+        scale(0.97);
+}
+
+
+/* =====================================================
+   CARTÕES
+===================================================== */
+
+.card-screen {
+
+    position: absolute;
+
+    inset: 0;
+
+    z-index: 15;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    opacity: 0;
+
+    pointer-events: none;
+
+    transition:
+        opacity 1s ease;
+
+    background:
+        radial-gradient(
+            circle at center,
+            rgba(
+                80,
+                0,
+                40,
+                0.3
+            ),
+            transparent 55%
+        ),
+
+        #030003;
+}
+
+.card-screen.show {
+
+    opacity: 1;
+
+    pointer-events: auto;
+}
+
+
+/* =====================================================
+   CARTÃO
+===================================================== */
+
+.card-wrap {
+
+    width:
+        min(
+            78vw,
+            390px
+        );
+
+    transform:
+        scale(0.92);
+
+    transition:
+        transform 1s ease;
+
+    filter:
+        drop-shadow(
+            0 0 25px
+            rgba(
+                255,
+                30,
+                145,
+                0.3
+            )
+        );
+}
+
+.card-screen.show .card-wrap {
+
+    transform:
+        scale(1);
+}
+
+.card-img {
+
+    display: block;
+
+    width: 100%;
+
+    border-radius: 14px;
+
+    border:
+        1px solid
+        rgba(
+            255,
+            100,
+            180,
+            0.25
+        );
+}
+
+
+/* =====================================================
+   BOTÃO CORAÇÃO
+===================================================== */
+
+.heart-button {
+
+    position: absolute;
+
+    z-index: 50;
+
+    left: 50%;
+
+    bottom: 8%;
+
+    transform:
+        translateX(-50%);
+
+    width: 46px;
+
+    height: 46px;
+
+    display: none;
+
+    border:
+        1px solid
+        rgba(
+            255,
+            180,
+            220,
+            0.7
+        );
+
+    border-radius: 50%;
+
+    background:
+        rgba(
+            255,
+            255,
+            255,
+            0.95
+        );
+
+    color: #e81772;
+
+    font-size: 22px;
+
+    cursor: pointer;
+
+    box-shadow:
+        0 0 20px
+        rgba(
+            255,
+            50,
+            150,
+            0.5
+        );
+}
+
+.heart-button.show {
+
+    display: block;
+}
+
+
+/* =====================================================
+   CELULAR
+===================================================== */
+
+@media (max-width: 600px) {
+
+    .orbit-word {
+
+        font-size: 9px;
+
+        letter-spacing: 0;
+
+    }
+
+}
+
+</style>
+</head>
+
+
+<body>
+
+<div id="app">
+
+
+    <!-- =================================================
+         MÚSICA DE FUNDO
+    ================================================== -->
+
+    <audio
+        id="backgroundMusic"
+        src="UM AMOR PURO.mp3"
+        loop
+        preload="auto">
+    </audio>
+
+
+    <!-- =================================================
+         GALÁXIA
+    ================================================== -->
+
+    <canvas id="space"></canvas>
+
+
+    <!-- =================================================
+         FRASES
+    ================================================== -->
+
+    <div id="orbitText"></div>
+
+
+    <!-- =================================================
+         VINHETA
+    ================================================== -->
+
+    <div class="vignette"></div>
+
+
+    <!-- =================================================
+         TELA INICIAL
+    ================================================== -->
+
+    <div
+        id="start"
+        class="start"
+    >
+
+        <div class="start-box">
+
+            <h1>
+                Para Henrique<br>
+                Limone...
+            </h1>
+
+            <p>
+                Para você sempre lembrar o quão
+                especial é pra mim
+            </p>
+
+            <button
+                id="enter"
+                type="button"
+            >
+                Iniciar aqui ♥
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <!-- =================================================
+         CARTÃO 1
+    ================================================== -->
+
+    <div
+        id="card1"
+        class="card-screen"
+    >
+
+        <div class="card-wrap">
+
+            <img
+                src="assets/card1.png"
+                class="card-img"
+                alt=""
+            >
+
+        </div>
+
+    </div>
+
+
+    <!-- =================================================
+         CARTÃO 2
+    ================================================== -->
+
+    <div
+        id="card2"
+        class="card-screen"
+    >
+
+        <div class="card-wrap">
+
+            <img
+                src="assets/card2.png"
+                class="card-img"
+                alt=""
+            >
+
+        </div>
+
+    </div>
+
+
+    <!-- =================================================
+         CARTÃO 3
+    ================================================== -->
+
+    <div
+        id="card3"
+        class="card-screen"
+    >
+
+        <div class="card-wrap">
+
+            <img
+                src="assets/card3.png"
+                class="card-img"
+                alt=""
+            >
+
+        </div>
+
+    </div>
+
+
+    <!-- =================================================
+         BOTÃO CORAÇÃO
+    ================================================== -->
+
+    <button
+        id="heartBtn"
+        class="heart-button"
+        type="button"
+    >
+        ♥
+    </button>
+
+</div>
+
+
+<script>
+
+/* =====================================================
+   ELEMENTOS
+===================================================== */
+
+const canvas =
+    document.getElementById(
+        "space"
+    );
+
+const ctx =
+    canvas.getContext(
+        "2d"
+    );
+
+const start =
+    document.getElementById(
+        "start"
+    );
+
+const enter =
+    document.getElementById(
+        "enter"
+    );
+
+const heartBtn =
+    document.getElementById(
+        "heartBtn"
+    );
+
+const orbitText =
+    document.getElementById(
+        "orbitText"
+    );
+
+const backgroundMusic =
+    document.getElementById(
+        "backgroundMusic"
+    );
+
+const cards = [
+
+    document.getElementById(
+        "card1"
+    ),
+
+    document.getElementById(
+        "card2"
+    ),
+
+    document.getElementById(
+        "card3"
+    )
+
+];
+
+
+/* =====================================================
+   FRASES
+===================================================== */
+
+const phrases = [
+
+    "eu te amo",
+
+    "você é muito importante pra mim",
+
+    "você é incrível",
+
+    "eu te venero",
+
+    "você é perfeito",
+
+    "você é gentil",
+
+    "você é sublime",
+
+    "você é magnífico",
+
+    "você é belo",
+
+    "você é surreal",
+
+    "você me faz bem",
+
+    "você é respeitoso",
+
+    "você é o significado da palavra amor"
+
+];
+
+
+/* =====================================================
+   VARIÁVEIS
+===================================================== */
+
+let W = 0;
+
+let H = 0;
+
+let DPR = 1;
+
+let particles = [];
+
+let floatingHearts = [];
+
+let orbitWords = [];
+
+let running = false;
+
+let startTime = 0;
+
+
+/* =====================================================
+   CRIAR FRASES
+===================================================== */
+
+function createOrbitWords() {
+
+    orbitText.innerHTML = "";
+
+    orbitWords = [];
+
+
+    phrases.forEach(
+        function(
+            text,
+            index
+        ) {
+
+            const element =
+                document.createElement(
+                    "div"
+                );
+
+
+            element.className =
+                "orbit-word";
+
+
+            element.textContent =
+                text;
+
+
+            orbitText.appendChild(
+                element
+            );
+
+
+            const angle =
+                (
+                    index /
+                    phrases.length
+                ) *
+                Math.PI *
+                2;
+
+
+            orbitWords.push({
+
+                element:
+                    element,
+
+                angle:
+                    angle,
+
+                speed:
+                    0.000045 +
+                    (
+                        index % 4
+                    ) *
+                    0.000006,
+
+                direction:
+                    index % 2 === 0
+                    ? 1
+                    : -1,
+
+                fadeOffset:
+                    index *
+                    0.17
+
+            });
+
+        }
+    );
+}
+
+
+/* =====================================================
+   RESIZE
+===================================================== */
+
+function resize() {
+
+    DPR =
+        Math.min(
+            window.devicePixelRatio || 1,
+            2
+        );
+
+
+    W =
+        window.innerWidth;
+
+
+    H =
+        window.innerHeight;
+
+
+    canvas.width =
+        W * DPR;
+
+
+    canvas.height =
+        H * DPR;
+
+
+    canvas.style.width =
+        W + "px";
+
+
+    canvas.style.height =
+        H + "px";
+
+
+    ctx.setTransform(
+        DPR,
+        0,
+        0,
+        DPR,
+        0,
+        0
+    );
+
+
+    makeParticles();
+}
+
+
+window.addEventListener(
+    "resize",
+    resize
+);
+
+
+/* =====================================================
+   RANDOM
+===================================================== */
+
+function rand(
+    min,
+    max
+) {
+
+    return (
+        min +
+        Math.random() *
+        (
+            max -
+            min
+        )
+    );
+}
+
+
+/* =====================================================
+   CORAÇÃO MATEMÁTICO
+===================================================== */
+
+function heartXY(
+    t,
+    scale
+) {
+
+    return {
+
+        x:
+            16 *
+            Math.pow(
+                Math.sin(t),
+                3
+            ) *
+            scale,
+
+        y:
+            -(
+                13 *
+                Math.cos(t)
+
+                -
+
+                5 *
+                Math.cos(
+                    2 * t
+                )
+
+                -
+
+                2 *
+                Math.cos(
+                    3 * t
+                )
+
+                -
+
+                Math.cos(
+                    4 * t
+                )
+            ) *
+            scale
+
+    };
+}
+
+
+/* =====================================================
+   PARTÍCULAS
+===================================================== */
+
+function makeParticles() {
+
+    particles = [];
+
+
+    const count =
+        Math.min(
+            1600,
+            Math.floor(
+                W * H / 650
+            )
+        );
+
+
+    for (
+        let i = 0;
+        i < count;
+        i++
+    ) {
+
+        particles.push({
+
+            angle:
+                Math.random() *
+                Math.PI *
+                2,
+
+            radius:
+                Math.pow(
+                    Math.random(),
+                    0.55
+                ),
+
+            size:
+                rand(
+                    0.4,
+                    2
+                ),
+
+            alpha:
+                rand(
+                    0.2,
+                    1
+                ),
+
+            twinkle:
+                Math.random() *
+                10
+
+        });
+
+    }
+}
+
+
+/* =====================================================
+   POSIÇÃO DAS PARTÍCULAS
+===================================================== */
+
+function projectParticle(
+    particle,
+    time
+) {
+
+    const centerX =
+        W * 0.5;
+
+
+    const centerY =
+        H * 0.57;
+
+
+    const maxRadius =
+        Math.min(
+            W,
+            H
+        ) * 0.43;
+
+
+    const radius =
+        particle.radius *
+        maxRadius;
+
+
+    const rotation =
+        time *
+        0.00016;
+
+
+    const x =
+        Math.cos(
+            particle.angle +
+            rotation
+        ) *
+        radius;
+
+
+    const z =
+        Math.sin(
+            particle.angle +
+            rotation
+        ) *
+        radius;
+
+
+    return {
+
+        x:
+            centerX +
+            x,
+
+        y:
+            centerY +
+            z * 0.52 +
+
+            Math.sin(
+                particle.twinkle +
+                time * 0.001
+            ) *
+            3
+
+    };
+}
+
+
+/* =====================================================
+   ESTRELAS
+===================================================== */
+
+function drawStars(
+    time
+) {
+
+    ctx.fillStyle =
+        "rgba(0,0,0,0.25)";
+
+
+    ctx.fillRect(
+        0,
+        0,
+        W,
+        H
+    );
+
+
+    for (
+        let i = 0;
+        i < 220;
+        i++
+    ) {
+
+        const x =
+            (
+                i * 97.37
+            ) % W;
+
+
+        const y =
+            (
+                i * 53.91
+            ) % H;
+
+
+        const alpha =
+            0.1 +
+            0.16 *
+            Math.sin(
+                time * 0.001 +
+                i
+            );
+
+
+        ctx.fillStyle =
+            `rgba(
+                255,
+                200,
+                230,
+                ${alpha}
+            )`;
+
+
+        ctx.fillRect(
+            x,
+            y,
+            1,
+            1
+        );
+
+    }
+}
+
+
+/* =====================================================
+   GALÁXIA
+===================================================== */
+
+function drawGalaxy(
+    time
+) {
+
+    const centerX =
+        W * 0.5;
+
+
+    const centerY =
+        H * 0.57;
+
+
+    const nebula =
+        ctx.createRadialGradient(
+            centerX,
+            centerY,
+            0,
+            centerX,
+            centerY,
+            Math.min(
+                W,
+                H
+            ) * 0.48
+        );
+
+
+    nebula.addColorStop(
+        0,
+        "rgba(255,20,145,0.25)"
+    );
+
+
+    nebula.addColorStop(
+        0.15,
+        "rgba(255,20,145,0.15)"
+    );
+
+
+    nebula.addColorStop(
+        0.35,
+        "rgba(180,0,100,0.08)"
+    );
+
+
+    nebula.addColorStop(
+        0.7,
+        "rgba(80,0,50,0.03)"
+    );
+
+
+    nebula.addColorStop(
+        1,
+        "rgba(0,0,0,0)"
+    );
+
+
+    ctx.fillStyle =
+        nebula;
+
+
+    ctx.fillRect(
+        0,
+        0,
+        W,
+        H
+    );
+
+
+    ctx.save();
+
+
+    ctx.globalCompositeOperation =
+        "lighter";
+
+
+    /* PARTÍCULAS */
+
+    for (
+        const particle of particles
+    ) {
+
+        const point =
+            projectParticle(
+                particle,
+                time
+            );
+
+
+        const opacity =
+            Math.max(
+                0.03,
+                particle.alpha *
+                (
+                    1 -
+                    particle.radius *
+                    0.72
+                )
+            );
+
+
+        ctx.fillStyle =
+            `rgba(
+                255,
+                40,
+                160,
+                ${opacity}
+            )`;
+
+
+        ctx.beginPath();
+
+
+        ctx.arc(
+            point.x,
+            point.y,
+            particle.size,
+            0,
+            Math.PI * 2
+        );
+
+
+        ctx.fill();
+
+    }
+
+
+    /* ESPIRAIS */
+
+    ctx.lineWidth = 1.4;
+
+
+    for (
+        let k = 0;
+        k < 9;
+        k++
+    ) {
+
+        ctx.beginPath();
+
+
+        for (
+            let i = 0;
+            i < 220;
+            i++
+        ) {
+
+            const angle =
+                i * 0.13 +
+                k * 0.8 +
+                time * 0.00035;
+
+
+            const radius =
+                (
+                    i / 220
+                ) *
+                Math.min(
+                    W,
+                    H
+                ) *
+                0.26;
+
+
+            const x =
+                centerX +
+                Math.cos(angle) *
+                radius;
+
+
+            const y =
+                centerY +
+                Math.sin(angle) *
+                radius *
+                0.26;
+
+
+            if (
+                i === 0
+            ) {
+
+                ctx.moveTo(
+                    x,
+                    y
+                );
+
+            } else {
+
+                ctx.lineTo(
+                    x,
+                    y
+                );
+
+            }
+
+        }
+
+
+        ctx.strokeStyle =
+            "rgba(255,20,150,0.11)";
+
+
+        ctx.stroke();
+
+    }
+
+
+    /* NÚCLEO */
+
+    const core =
+        ctx.createRadialGradient(
+            centerX,
+            centerY,
+            0,
+            centerX,
+            centerY,
+            85
+        );
+
+
+    core.addColorStop(
+        0,
+        "rgba(255,255,255,0.75)"
+    );
+
+
+    core.addColorStop(
+        0.1,
+        "rgba(255,120,210,0.45)"
+    );
+
+
+    core.addColorStop(
+        0.35,
+        "rgba(255,30,160,0.14)"
+    );
+
+
+    core.addColorStop(
+        1,
+        "rgba(255,0,120,0)"
+    );
+
+
+    ctx.fillStyle =
+        core;
+
+
+    ctx.beginPath();
+
+
+    ctx.arc(
+        centerX,
+        centerY,
+        85,
+        0,
+        Math.PI * 2
+    );
+
+
+    ctx.fill();
+
+
+    ctx.restore();
+}
+
+
+/* =====================================================
+   FRASES
+   APARECEM E DESAPARECEM CONSTANTEMENTE
+===================================================== */
+
+function drawOrbitWords(
+    time,
+    progress
+) {
+
+    if (
+        orbitWords.length === 0
+    ) {
+        return;
+    }
+
+
+    const centerX =
+        W * 0.5;
+
+
+    const centerY =
+        H * 0.57;
+
+
+    let radiusX =
+        Math.min(
+            W,
+            H
+        ) * 0.40;
+
+
+    let radiusY =
+        Math.min(
+            W,
+            H
+        ) * 0.28;
+
+
+    if (
+        W < 600
+    ) {
+
+        radiusX =
+            W * 0.43;
+
+        radiusY =
+            H * 0.27;
+
+    }
+
+
+    orbitWords.forEach(
+        function(
+            word,
+            index
+        ) {
+
+            const angle =
+                word.angle +
+                time *
+                word.speed *
+                word.direction;
+
+
+            const floating =
+                Math.sin(
+                    time * 0.0007 +
+                    index
+                ) *
+                4;
+
+
+            const x =
+                Math.cos(
+                    angle
+                ) *
+                radiusX;
+
+
+            const y =
+                Math.sin(
+                    angle
+                ) *
+                radiusY +
+                floating;
+
+
+            const cycle =
+                (
+                    time * 0.00018 +
+                    word.fadeOffset
+                ) %
+                1;
+
+
+            let fade;
+
+
+            if (
+                cycle < 0.22
+            ) {
+
+                fade =
+                    cycle / 0.22;
+
+            }
+
+            else if (
+                cycle < 0.67
+            ) {
+
+                fade = 1;
+
+            }
+
+            else {
+
+                fade =
+                    1 -
+                    (
+                        (
+                            cycle -
+                            0.67
+                        ) /
+                        0.33
+                    );
+
+            }
+
+
+            fade =
+                fade *
+                fade *
+                (
+                    3 -
+                    2 * fade
+                );
+
+
+            const depth =
+                (
+                    Math.sin(
+                        angle
+                    ) + 1
+                ) / 2;
+
+
+            let opacity =
+                0.22 +
+                depth * 0.70;
+
+
+            opacity *=
+                fade;
+
+
+            const entrance =
+                Math.max(
+                    0,
+                    Math.min(
+                        1,
+                        (
+                            progress -
+                            index * 0.025
+                        ) /
+                        0.45
+                    )
+                );
+
+
+            opacity *=
+                entrance;
+
+
+            const rotation =
+                Math.sin(
+                    angle
+                ) *
+                7;
+
+
+            word.element.style.transform =
+                `
+                translate(
+                    calc(-50% + ${x}px),
+                    calc(-50% + ${y}px)
+                )
+                rotate(${rotation}deg)
+                `;
+
+
+            word.element.style.opacity =
+                opacity.toFixed(3);
+
+        }
+    );
+}
+
+
+/* =====================================================
+   CORAÇÃO
+===================================================== */
+
+function drawHeart(
+    time,
+    progress
+) {
+
+    const centerX =
+        W * 0.5;
+
+
+    const centerY =
+        H * 0.57;
+
+
+    const scale =
+        Math.min(
+            W,
+            H
+        ) * 0.008;
+
+
+    const heartCenterY =
+        centerY -
+        (
+            17 *
+            scale
+        );
+
+
+    ctx.save();
+
+
+    ctx.translate(
+        centerX,
+        heartCenterY
+    );
+
+
+    ctx.globalCompositeOperation =
+        "lighter";
+
+
+    const total =
+        1300;
+
+
+    for (
+        let i = 0;
+        i < total;
+        i++
+    ) {
+
+        const t =
+            (
+                i / total
+            ) *
+            Math.PI *
+            2;
+
+
+        const point =
+            heartXY(
+                t,
+                scale
+            );
+
+
+        const spread =
+            (
+                1 -
+                progress
+            ) *
+            45;
+
+
+        const x =
+            point.x +
+            rand(
+                -spread,
+                spread
+            ) +
+            rand(
+                -1,
+                1
+            );
+
+
+        const y =
+            point.y +
+            rand(
+                -spread,
+                spread
+            ) +
+            rand(
+                -1,
+                1
+            );
+
+
+        const opacity =
+            0.3 +
+            Math.random() *
+            0.7;
+
+
+        ctx.fillStyle =
+            `rgba(
+                255,
+                45,
+                170,
+                ${opacity}
+            )`;
+
+
+        ctx.beginPath();
+
+
+        ctx.arc(
+            x,
+            y,
+            rand(
+                0.5,
+                1.6
+            ),
+            0,
+            Math.PI * 2
+        );
+
+
+        ctx.fill();
+
+    }
+
+
+    ctx.strokeStyle =
+        "rgba(255,110,205,0.58)";
+
+
+    ctx.lineWidth =
+        1.1;
+
+
+    ctx.beginPath();
+
+
+    for (
+        let i = 0;
+        i <= 200;
+        i++
+    ) {
+
+        const t =
+            (
+                i / 200
+            ) *
+            Math.PI *
+            2;
+
+
+        const point =
+            heartXY(
+                t,
+                scale
+            );
+
+
+        if (
+            i === 0
+        ) {
+
+            ctx.moveTo(
+                point.x,
+                point.y
+            );
+
+        } else {
+
+            ctx.lineTo(
+                point.x,
+                point.y
+            );
+
+        }
+
+    }
+
+
+    ctx.stroke();
+
+
+    ctx.restore();
+
+
+    /* BRILHO CENTRAL */
+
+    const glow =
+        ctx.createRadialGradient(
+            centerX,
+            centerY,
+            0,
+            centerX,
+            centerY,
+            48
+        );
+
+
+    glow.addColorStop(
+        0,
+        "rgba(255,255,255,0.9)"
+    );
+
+
+    glow.addColorStop(
+        0.18,
+        "rgba(255,100,195,0.55)"
+    );
+
+
+    glow.addColorStop(
+        1,
+        "rgba(255,0,120,0)"
+    );
+
+
+    ctx.fillStyle =
+        glow;
+
+
+    ctx.beginPath();
+
+
+    ctx.arc(
+        centerX,
+        centerY,
+        48,
+        0,
+        Math.PI * 2
+    );
+
+
+    ctx.fill();
+}
+
+
+/* =====================================================
+   PEQUENOS CORAÇÕES
+===================================================== */
+
+function drawFloatingHearts(
+    time
+) {
+
+    if (
+        Math.random() <
+        0.035
+    ) {
+
+        floatingHearts.push({
+
+            x:
+                rand(
+                    W * 0.08,
+                    W * 0.92
+                ),
+
+            y:
+                H * 0.7,
+
+            life: 0,
+
+            drift:
+                rand(
+                    -0.25,
+                    0.25
+                )
+
+        });
+
+    }
+
+
+    ctx.save();
+
+
+    ctx.globalCompositeOperation =
+        "lighter";
+
+
+    for (
+        let i =
+            floatingHearts.length - 1;
+
+        i >= 0;
+
+        i--
+    ) {
+
+        const heart =
+            floatingHearts[i];
+
+
+        heart.life +=
+            0.012;
+
+
+        heart.y -=
+            0.5;
+
+
+        heart.x +=
+            Math.sin(
+                heart.life * 4
+            ) *
+            0.25 +
+            heart.drift;
+
+
+        if (
+            heart.life > 1
+        ) {
+
+            floatingHearts.splice(
+                i,
+                1
+            );
+
+            continue;
+
+        }
+
+
+        ctx.font =
+            `${rand(
+                12,
+                24
+            )}px Georgia`;
+
+
+        ctx.fillStyle =
+            `rgba(
+                255,
+                60,
+                160,
+                ${1 - heart.life}
+            )`;
+
+
+        ctx.fillText(
+            "♥",
+            heart.x,
+            heart.y
+        );
+
+    }
+
+
+    ctx.restore();
+}
+
+
+/* =====================================================
+   MOSTRAR CARTÃO
+===================================================== */
+
+function showCard(
+    number
+) {
+
+    cards.forEach(
+        function(
+            card,
+            index
+        ) {
+
+            card.classList.toggle(
+                "show",
+                index === number
+            );
+
+        }
+    );
+}
+
+
+/* =====================================================
+   ANIMAÇÃO PRINCIPAL
+===================================================== */
+
+function animate(
+    time
+) {
+
+    if (
+        !running
+    ) {
+        return;
+    }
+
+
+    const elapsed =
+        (
+            time -
+            startTime
+        ) / 1000;
+
+
+    ctx.fillStyle =
+        "#000";
+
+
+    ctx.fillRect(
+        0,
+        0,
+        W,
+        H
+    );
+
+
+    /* =================================================
+       PRIMEIRO CARTÃO
+    ================================================= */
+
+    if (
+        elapsed < 1.8
+    ) {
+
+        showCard(0);
+
+
+        heartBtn.classList.remove(
+            "show"
+        );
+
+
+        orbitText.style.opacity =
+            "0";
+
+
+        drawStars(
+            time
+        );
+
+    }
+
+
+    /* =================================================
+       GALÁXIA + FRASES
+    ================================================= */
+
+    else if (
+        elapsed < 7.8
+    ) {
+
+        showCard(-1);
+
+
+        heartBtn.classList.remove(
+            "show"
+        );
+
+
+        drawStars(
+            time
+        );
+
+
+        drawGalaxy(
+            time
+        );
+
+
+        const heartProgress =
+            Math.min(
+                1,
+                (
+                    elapsed -
+                    1.8
+                ) / 1.6
+            );
+
+
+        drawHeart(
+            time,
+            heartProgress
+        );
+
+
+        const textProgress =
+            Math.min(
+                1,
+                Math.max(
+                    0,
+                    (
+                        elapsed -
+                        2.5
+                    ) / 2
+                )
+            );
+
+
+        orbitText.style.opacity =
+            "1";
+
+
+        drawOrbitWords(
+            time,
+            textProgress
+        );
+
+
+        drawFloatingHearts(
+            time
+        );
+
+    }
+
+
+    /* =================================================
+       CARTÃO 2
+    ================================================= */
+
+    else if (
+        elapsed < 9.5
+    ) {
+
+        showCard(1);
+
+
+        heartBtn.classList.add(
+            "show"
+        );
+
+
+        orbitText.style.opacity =
+            "0";
+
+    }
+
+
+    /* =================================================
+       CARTÃO 3
+    ================================================= */
+
+    else if (
+        elapsed < 11.6
+    ) {
+
+        showCard(2);
+
+
+        heartBtn.classList.add(
+            "show"
+        );
+
+
+        orbitText.style.opacity =
+            "0";
+
+    }
+
+
+    /* =================================================
+       FINAL
+    ================================================= */
+
+    else {
+
+        showCard(-1);
+
+
+        heartBtn.classList.remove(
+            "show"
+        );
+
+
+        drawStars(
+            time
+        );
+
+
+        drawGalaxy(
+            time
+        );
+
+
+        orbitText.style.opacity =
+            "1";
+
+
+        drawOrbitWords(
+            time,
+            1
+        );
+
+
+        drawHeart(
+            time,
+            1
+        );
+
+
+        drawFloatingHearts(
+            time
+        );
+
+    }
+
+
+    requestAnimationFrame(
+        animate
+    );
+}
+
+
+/* =====================================================
+   INICIAR UNIVERSO
+===================================================== */
+
+function startUniverse() {
+
+    if (
+        running
+    ) {
+        return;
+    }
+
+
+    /* ================================================
+       COMEÇA A MÚSICA NO MESMO CLIQUE
+    ================================================= */
+
+    backgroundMusic.currentTime = 0;
+
+
+    backgroundMusic
+        .play()
+        .then(
+            function() {
+
+                console.log(
+                    "Música iniciada!"
+                );
+
+            }
+        )
+        .catch(
+            function(error) {
+
+                console.error(
+                    "Erro ao tocar a música:",
+                    error
+                );
+
+            }
+        );
+
+
+    start.classList.add(
+        "hide"
+    );
+
+
+    running = true;
+
+
+    startTime =
+        performance.now();
+
+
+    requestAnimationFrame(
+        animate
+    );
+}
+
+
+/* =====================================================
+   BOTÃO
+===================================================== */
+
+enter.addEventListener(
+    "click",
+    startUniverse
+);
+
+
+/* =====================================================
+   TOUCH
+===================================================== */
+
+enter.addEventListener(
+    "touchend",
+    function(event) {
+
+        event.preventDefault();
+
+        startUniverse();
+
+    },
+    {
+        passive: false
+    }
+);
+
+
+/* =====================================================
+   BOTÃO DO CORAÇÃO
+===================================================== */
+
+heartBtn.addEventListener(
+    "click",
+    function() {
+
+        cards.forEach(
+            function(card) {
+
+                card.classList.remove(
+                    "show"
+                );
+
+            }
+        );
+
+
+        heartBtn.classList.remove(
+            "show"
+        );
+
+    }
+);
+
+
+/* =====================================================
+   INICIALIZAÇÃO
+===================================================== */
+
+createOrbitWords();
+
+resize();
+
+</script>
+
+</body>
+
+</html>
+```
